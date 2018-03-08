@@ -1,13 +1,4 @@
-#ifndef _ASN1SCC_EIGEN_CONVERSIONS_H_
-#define _ASN1SCC_EIGEN_CONVERSIONS_H_
-
-// -----------
-// Eigen types 
-// -----------
-#include <Eigen/Geometry>
-
-#include <Pose.h>
-
+#include "conversions/asn1_eigen_conversions.hpp"
 
 void toASN1SCC(const Eigen::Vector3f& eigen_vector, Position& pos)
 {
@@ -35,5 +26,3 @@ void toASN1SCC(const Eigen::Affine3f& eigen_transform, Pose& pose)
 	toASN1SCC(eigen_transform.translation(), pose.pos);
 	toASN1SCC(eigen_transform.rotation(), pose.orient);
 }
-
-#endif // _ASN1SCC_EIGEN_CONVERSIONS_H_

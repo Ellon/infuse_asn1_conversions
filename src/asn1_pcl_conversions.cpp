@@ -1,19 +1,6 @@
-#ifndef _ASN1SCC_PCL_CONVERSIONS_H_
-#define _ASN1SCC_PCL_CONVERSIONS_H_
+#include "conversions/asn1_pcl_conversions.hpp"
 
-// -----------
-// PCL types 
-// -----------
-#include <pcl/point_cloud.h>
-#include <pcl/point_types.h>
-#include <pcl/PCLHeader.h>
-
-#include <Time.h>
-#include <Header.h>
-#include <Point.h>
-#include <PoseStamped.h>
-#include <PointCloudPoseStamped.h>
-
+#include "conversions/asn1_conversions.hpp"
 
 void toASN1SCC(const pcl::uint64_t& pcl_stamp, Time& time)
 {
@@ -43,8 +30,6 @@ void toASN1SCC(const pcl::PointCloud<pcl::PointXYZ>& pcl_cloud, const PoseStampe
 	toASN1SCC(pcl_cloud.header, cloud.header);
 	cloud.pose = pose_stamped;
 	cloud.pointCloudData.nCount = std::min((T_UInt32)pcl_cloud.points.size(), maxSizePointCloud);
-	for(unsigned int i = 0; i < cloud.pointCloudData.nCount; i++)
+	for(int i = 0; i < cloud.pointCloudData.nCount; i++)
 		toASN1SCC(pcl_cloud.points[i], cloud.pointCloudData.arr[i]);
 }
-
-#endif // _ASN1SCC_PCL_CONVERSIONS_H_

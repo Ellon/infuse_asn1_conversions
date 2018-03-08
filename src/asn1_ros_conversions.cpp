@@ -1,11 +1,4 @@
-#ifndef _ASN1SCC_ROS_CONVERSIONS_H_
-#define _ASN1SCC_ROS_CONVERSIONS_H_
-
-// -----------
-// ROS types 
-// -----------
-#include <ros/time.h>
-
+#include "conversions/asn1_ros_conversions.hpp"
 
 void toASN1SCC(const ros::Time& ros_stamp, Time& time)
 {
@@ -14,5 +7,3 @@ void toASN1SCC(const ros::Time& ros_stamp, Time& time)
 	// See: https://www.rock-robotics.org/stable/api/base/types/structbase_1_1Time.html#a9ebef61fd3740771e8f7ff888e41c9cd
 	time.usecPerSec = 1000000ll;
 }
-
-#endif // _ASN1SCC_ROS_CONVERSIONS_H_

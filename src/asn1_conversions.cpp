@@ -1,15 +1,7 @@
-#ifndef _ASN1SCC_CONVERSIONS_H_
-#define _ASN1SCC_CONVERSIONS_H_
+#include "conversions/asn1_conversions.hpp" 
 
-// -----------
-// Basic types 
-// -----------
-#include <string>
 #include <cstring>   // for memcpy
 #include <stdexcept> // for std::runtime_error
-
-#include <taste-extended.h>
-
 
 void toASN1SCC(const std::string& str, T_String& t_str)
 {
@@ -24,6 +16,3 @@ void fromASN1SCC(const T_String& t_str, std::string& str)
 {
 	str = std::string((const char*)t_str.arr, (size_t)t_str.nCount);
 }
-
-
-#endif // _ASN1SCC_CONVERSIONS_H_
