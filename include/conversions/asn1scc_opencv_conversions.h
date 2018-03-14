@@ -5,7 +5,6 @@
 #include <iostream>
 #include <DEM.h>
 
-using namespace std;
 
 bool fromASN1SCC(const DigitalElevationRaster &demMsg, cv::Mat &demMatrix)
 {
@@ -14,7 +13,7 @@ bool fromASN1SCC(const DigitalElevationRaster &demMsg, cv::Mat &demMatrix)
     int nbLines = demMsg.nbLines;
     if (nbCols != demMatrix.cols || nbLines != demMatrix.rows)
     {
-        cerr << "Wrong dimensions of input Matrix [" << demMatrix.rows << "x" << demMatrix.cols <<"] While expecting [" << nbLines << "x" << nbCols << "]" <<  endl;
+        std::cerr << "Wrong dimensions of input Matrix [" << demMatrix.rows << "x" << demMatrix.cols <<"] While expecting [" << nbLines << "x" << nbCols << "]" <<  std::endl;
         return false;
     }
     for (int i = 0; i < nbCols; i++)
