@@ -11,7 +11,7 @@ add_library(asn1_eigen_conversions src/asn1_eigen_conversions.cpp)
 target_link_libraries(asn1_eigen_conversions cdff_types)
 
 add_library(asn1_pcl_conversions src/asn1_pcl_conversions.cpp)
-target_link_libraries(asn1_pcl_conversions cdff_types)
+target_link_libraries(asn1_pcl_conversions asn1_conversions cdff_types)
 
 add_library(asn1_ros_conversions src/asn1_ros_conversions.cpp)
 target_link_libraries(asn1_ros_conversions cdff_types)
