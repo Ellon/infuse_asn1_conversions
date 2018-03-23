@@ -14,5 +14,7 @@
 
 void toASN1SCC(const ros::Time& ros_stamp, Time& time);
 
+void fromASN1SCC(const Time& time, ros::Time& ros_stamp);
+
 
 #endif // _ASN1SCC_ROS_CONVERSIONS_H_
