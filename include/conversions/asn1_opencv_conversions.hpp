@@ -2,7 +2,7 @@
 #define __ASN1SCC_OPENCV_CONVERSIONS__
 
 #include <opencv2/opencv.hpp>
-#include <conversions/asn1scc_conversions.h>
+#include <conversions/asn1_conversions.hpp>
 #include <iostream>
 #include <DEM.h>
 

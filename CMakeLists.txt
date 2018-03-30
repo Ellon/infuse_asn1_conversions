@@ -15,3 +15,6 @@ target_link_libraries(asn1_pcl_conversions asn1_conversions cdff_types)
 
 add_library(asn1_ros_conversions src/asn1_ros_conversions.cpp)
 target_link_libraries(asn1_ros_conversions cdff_types)
+
+add_library(asn1_opencv_conversions src/asn1_opencv_conversions.cpp)
+target_link_libraries(asn1_opencv_conversions cdff_types)

@@ -1,4 +1,4 @@
-#include "conversions/asn1_opencv_conversions.h"
+#include "conversions/asn1_opencv_conversions.hpp"
 
 bool fromASN1SCC(const DigitalElevationRaster &demMsg, cv::Mat &demMatrix)
 {
@@ -42,6 +42,7 @@ bool toASN1SCC(const cv::Mat &demMatrix, DigitalElevationRaster &demMsg)
 
     /* Don't forget the count */
     demMsg.zValue.nCount = demMsg.nbCols*demMsg.nbLines;
+    return true;
 
 }
 
