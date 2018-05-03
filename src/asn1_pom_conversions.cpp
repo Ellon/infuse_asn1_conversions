@@ -3,9 +3,9 @@
 
 using namespace std;
 
-void toASN1SCC(const PositionManager::Pose& pose, Pose_Infuse& asnPose)
+void toASN1SCC(const PositionManager::Pose& pose, Pose_InFuse& asnPose)
 {
-    asnPose.msgVersion = pose_Infuse_Version;
+    asnPose.msgVersion = pose_InFuse_Version;
 
     toASN1SCC(pose._parent, asnPose.parentFrameId);
     asnPose.parentTime.microseconds = pose._parentTime;
@@ -36,7 +36,7 @@ void toASN1SCC(const PositionManager::Pose& pose, Pose_Infuse& asnPose)
     }
 }
 
-void fromASN1SCC(const Pose_Infuse& asnPose, PositionManager::Pose& pose)
+void fromASN1SCC(const Pose_InFuse& asnPose, PositionManager::Pose& pose)
 {
     fromASN1SCC(asnPose.parentFrameId, pose._parent);
     pose._parentTime = asnPose.parentTime.microseconds;
