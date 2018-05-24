@@ -16,6 +16,7 @@
 #include <Point.h>
 #include <PoseStamped.h>
 #include <PointCloudPoseStamped.h>
+#include <PointCloud_InFuse.h>
 
 
 void toASN1SCC(const pcl::uint64_t& pcl_stamp, Time& time);
@@ -33,5 +34,12 @@ void fromASN1SCC(const Point& pt, pcl::PointXYZ& pcl_pt);
 void toASN1SCC(const pcl::PointCloud<pcl::PointXYZ>& pcl_cloud, const PoseStamped& pose_stamped, PointCloudPoseStamped& cloud);
 
 void fromASN1SCC(const PointCloudPoseStamped& cloud, pcl::PointCloud<pcl::PointXYZ>& pcl_cloud, PoseStamped& pose_stamped);
+
+void toASN1SCC(const pcl::PointXYZI& pcl_pt, Point& pt);
+
+void fromASN1SCC(const Point& pt, pcl::PointXYZI& pcl_pt);
+
+void toASN1SCC(const pcl::PointCloud<pcl::PointXYZI>& pcl_cloud, PointCloud_InFuse& cloud);
+
 
 #endif // _ASN1SCC_PCL_CONVERSIONS_H_

@@ -36,7 +36,24 @@ void toASN1SCC(const pcl::PointXYZ& pcl_pt, Point& pt)
 	pt.nCount = 3;
 }
 
+void toASN1SCC(const pcl::PointXYZI& pcl_pt, Point& pt)
+{
+	pt.arr[0] = pcl_pt.x;
+	pt.arr[1] = pcl_pt.y;
+	pt.arr[2] = pcl_pt.z;
+	pt.nCount = 3;
+}
+
 void fromASN1SCC(const Point& pt, pcl::PointXYZ& pcl_pt)
+{
+	if(pt.nCount < 3)
+		throw std::runtime_error("Invalid Point size ( size < 3)");
+	pcl_pt.x = pt.arr[0];
+	pcl_pt.y = pt.arr[1];
+	pcl_pt.z = pt.arr[2];
+}
+
+void fromASN1SCC(const Point& pt, pcl::PointXYZI& pcl_pt)
 {
 	if(pt.nCount < 3)
 		throw std::runtime_error("Invalid Point size ( size < 3)");
@@ -67,4 +84,50 @@ void fromASN1SCC(const PointCloudPoseStamped& cloud, pcl::PointCloud<pcl::PointX
 	{
 		fromASN1SCC(cloud.pointCloudData.arr[i], pcl_cloud.points[i]);
 	}
+}
+
+void toASN1SCC(const pcl::PointCloud<pcl::PointXYZI>& pcl_cloud, PointCloud_InFuse& cloud)
+{
+	// Version
+	cloud.msgVersion = pointCloud_Infuse_Version;
+
+	// timeStamp
+	toASN1SCC(pcl_cloud.header.stamp, cloud.timeStamp);
+
+	// Set number of points
+	cloud.points.nCount = std::min((T_UInt32)pcl_cloud.points.size(), maxSize);
+	cloud.intensity.nCount = cloud.points.nCount;
+
+	// Set oganization info
+	if (cloud.points.nCount == (int)pcl_cloud.points.size()) {
+		cloud.isOrdered = (pcl_cloud.height > 1);
+		cloud.height = pcl_cloud.height;
+		cloud.width = pcl_cloud.width;
+	} else {
+		// we truncated the point cloud to 'maxSize', so the cloud is not
+		// organized anymore.
+		cloud.isOrdered = false;
+		cloud.height = 1;
+		cloud.width = cloud.points.nCount;
+	}
+
+	// Set points
+	for(int i = 0; i < cloud.points.nCount; i++)
+	{
+		toASN1SCC(pcl_cloud.points[i], cloud.points.arr[i]);
+		cloud.intensity.arr[i] = (T_Int32)pcl_cloud.points[i].intensity;
+	}
+
+	// No color information
+	cloud.isRegistered = false;
+	PointCloud_InFuse_colors_Initialize(&cloud.colors);
+
+	// The following information does not depend on the point cloud and should
+	// be set from outside this function
+	//
+	// cloud.sensorId = ?;
+	// cloud.frameId = ?;
+	// cloud.hasFixedTransform = ?;
+	// cloud.pose_robotFrame_sensorFrame = ?;
+	// cloud.pose_fixedFrame_robotFrame = ?;
 }
