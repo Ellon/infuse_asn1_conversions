@@ -94,28 +94,34 @@ void toASN1SCC(const pcl::PointCloud<pcl::PointXYZI>& pcl_cloud, PointCloud_InFu
 	// timeStamp
 	toASN1SCC(pcl_cloud.header.stamp, cloud.timeStamp);
 
+	// Set points
+	unsigned int pt_count = 0;
+	for (size_t i = 0; i < pcl_cloud.points.size(); i++) {
+		if (pcl::isFinite(pcl_cloud.points[i]) and pcl_isfinite(pcl_cloud.points[i].intensity)) {
+			toASN1SCC(pcl_cloud.points[i], cloud.points.arr[pt_count]);
+			cloud.intensity.arr[pt_count] = (T_Int32)pcl_cloud.points[i].intensity;
+			pt_count++;
+		}
+		if (pt_count >= maxSize)
+			break;
+	}
+
 	// Set number of points
-	cloud.points.nCount = std::min((T_UInt32)pcl_cloud.points.size(), maxSize);
-	cloud.intensity.nCount = cloud.points.nCount;
+	cloud.points.nCount = (int)pt_count;
+	cloud.intensity.nCount = (int)pt_count;
 
 	// Set oganization info
-	if (cloud.points.nCount == (int)pcl_cloud.points.size()) {
+	if (pt_count == pcl_cloud.points.size()) {
 		cloud.isOrdered = (pcl_cloud.height > 1);
 		cloud.height = pcl_cloud.height;
 		cloud.width = pcl_cloud.width;
 	} else {
-		// we truncated the point cloud to 'maxSize', so the cloud is not
+		// we truncated the point cloud (either due to ASN.1 'maxSize' limit
+		// or because there were invalid points), so the cloud is not
 		// organized anymore.
 		cloud.isOrdered = false;
 		cloud.height = 1;
-		cloud.width = cloud.points.nCount;
-	}
-
-	// Set points
-	for(int i = 0; i < cloud.points.nCount; i++)
-	{
-		toASN1SCC(pcl_cloud.points[i], cloud.points.arr[i]);
-		cloud.intensity.arr[i] = (T_Int32)pcl_cloud.points[i].intensity;
+		cloud.width = pt_count;
 	}
 
 	// No color information
