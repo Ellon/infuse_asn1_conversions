@@ -41,6 +41,8 @@ void fromASN1SCC(const Point& pt, pcl::PointXYZI& pcl_pt);
 
 void toASN1SCC(const pcl::PointCloud<pcl::PointXYZI>& pcl_cloud, PointCloud_InFuse& cloud);
 
+void fromASN1SCC(const PointCloud_InFuse& cloud, pcl::PointCloud<pcl::PointXYZI>& pcl_cloud);
+
 void toASN1SCC(const pcl::PointCloud<pcl::PointXYZ>& pcl_cloud, PointCloud_InFuse& cloud);
 
 
