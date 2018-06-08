@@ -41,5 +41,7 @@ void fromASN1SCC(const Point& pt, pcl::PointXYZI& pcl_pt);
 
 void toASN1SCC(const pcl::PointCloud<pcl::PointXYZI>& pcl_cloud, PointCloud_InFuse& cloud);
 
+void toASN1SCC(const pcl::PointCloud<pcl::PointXYZ>& pcl_cloud, PointCloud_InFuse& cloud);
+
 
 #endif // _ASN1SCC_PCL_CONVERSIONS_H_

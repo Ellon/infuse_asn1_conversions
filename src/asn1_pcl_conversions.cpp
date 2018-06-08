@@ -137,3 +137,56 @@ void toASN1SCC(const pcl::PointCloud<pcl::PointXYZI>& pcl_cloud, PointCloud_InFu
 	// cloud.pose_robotFrame_sensorFrame = ?;
 	// cloud.pose_fixedFrame_robotFrame = ?;
 }
+
+void toASN1SCC(const pcl::PointCloud<pcl::PointXYZ>& pcl_cloud, PointCloud_InFuse& cloud)
+{
+	// Version
+	cloud.msgVersion = pointCloud_Infuse_Version;
+
+	// timeStamp
+	toASN1SCC(pcl_cloud.header.stamp, cloud.timeStamp);
+
+	// Set points
+	unsigned int pt_count = 0;
+	for (size_t i = 0; i < pcl_cloud.points.size(); i++) {
+		if (pcl::isFinite(pcl_cloud.points[i])) {
+			toASN1SCC(pcl_cloud.points[i], cloud.points.arr[pt_count]);
+			pt_count++;
+		}
+		if (pt_count >= maxSize)
+			break;
+	}
+
+	// Set number of points
+	cloud.points.nCount = (int)pt_count;
+
+	// Set oganization info
+	if (pt_count == pcl_cloud.points.size()) {
+		cloud.isOrdered = (pcl_cloud.height > 1);
+		cloud.height = pcl_cloud.height;
+		cloud.width = pcl_cloud.width;
+	} else {
+		// we truncated the point cloud (either due to ASN.1 'maxSize' limit
+		// or because there were invalid points), so the cloud is not
+		// organized anymore.
+		cloud.isOrdered = false;
+		cloud.height = 1;
+		cloud.width = pt_count;
+	}
+
+	// No intensity information
+	PointCloud_InFuse_intensity_Initialize(&cloud.intensity);
+
+	// No color information
+	cloud.isRegistered = false;
+	PointCloud_InFuse_colors_Initialize(&cloud.colors);
+
+	// The following information does not depend on the point cloud and should
+	// be set from outside this function
+	//
+	// cloud.sensorId = ?;
+	// cloud.frameId = ?;
+	// cloud.hasFixedTransform = ?;
+	// cloud.pose_robotFrame_sensorFrame = ?;
+	// cloud.pose_fixedFrame_robotFrame = ?;
+}
