@@ -20,10 +20,10 @@ void toASN1SCC(const PositionManager::Pose& pose, Pose_InFuse& asnPose)
     asnPose.transform.translation.arr[2] = pose._tr.transform.translation(2);
 
     asnPose.transform.orientation.nCount = 4;
-    asnPose.transform.orientation.arr[0] = pose._tr.transform.orientation.w();
-    asnPose.transform.orientation.arr[1] = pose._tr.transform.orientation.x();
-    asnPose.transform.orientation.arr[2] = pose._tr.transform.orientation.y();
-    asnPose.transform.orientation.arr[3] = pose._tr.transform.orientation.z();
+    asnPose.transform.orientation.arr[0] = pose._tr.transform.orientation.x();
+    asnPose.transform.orientation.arr[1] = pose._tr.transform.orientation.y();
+    asnPose.transform.orientation.arr[2] = pose._tr.transform.orientation.z();
+    asnPose.transform.orientation.arr[3] = pose._tr.transform.orientation.w();
 
     asnPose.transform.cov.nCount = 6;
     for(int i = 0; i < 6; i++)
@@ -47,10 +47,10 @@ void fromASN1SCC(const Pose_InFuse& asnPose, PositionManager::Pose& pose)
     pose._tr.transform.translation(1) = asnPose.transform.translation.arr[1];
     pose._tr.transform.translation(2) = asnPose.transform.translation.arr[2];
     
-    pose._tr.transform.orientation.w() = asnPose.transform.orientation.arr[0];
-    pose._tr.transform.orientation.x() = asnPose.transform.orientation.arr[1];
-    pose._tr.transform.orientation.y() = asnPose.transform.orientation.arr[2];
-    pose._tr.transform.orientation.z() = asnPose.transform.orientation.arr[3];
+    pose._tr.transform.orientation.x() = asnPose.transform.orientation.arr[0];
+    pose._tr.transform.orientation.y() = asnPose.transform.orientation.arr[1];
+    pose._tr.transform.orientation.z() = asnPose.transform.orientation.arr[2];
+    pose._tr.transform.orientation.w() = asnPose.transform.orientation.arr[3];
     
     for(int i = 0; i < 6; i++)
     {
