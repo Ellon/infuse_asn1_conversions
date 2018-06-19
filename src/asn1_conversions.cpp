@@ -15,4 +15,5 @@ void toASN1SCC(const std::string& str, T_String& t_str)
 void fromASN1SCC(const T_String& t_str, std::string& str)
 {
 	str = std::string((const char*)t_str.arr, (size_t)t_str.nCount);
+	str = std::string((const char*)t_str.arr);//, (size_t)t_str.nCount);
 }
