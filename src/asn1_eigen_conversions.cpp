@@ -1,4 +1,4 @@
-#include "conversions/asn1_eigen_conversions.hpp"
+#include "infuse_asn1_conversions/asn1_eigen_conversions.hpp"
 
 void toASN1SCC(const Eigen::Vector3f& eigen_vector, Position& pos)
 {

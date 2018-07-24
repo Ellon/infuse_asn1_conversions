@@ -11,12 +11,12 @@
 // -----------
 // ASN1 types 
 // -----------
-#include <Time.h>
-#include <Header.h>
-#include <Point.h>
-#include <PoseStamped.h>
-#include <PointCloudPoseStamped.h>
-#include <PointCloud_InFuse.h>
+#include <infuse_cdff_types/Time.h>
+#include <infuse_cdff_types/Header.h>
+#include <infuse_cdff_types/Point.h>
+#include <infuse_cdff_types/PoseStamped.h>
+#include <infuse_cdff_types/PointCloudPoseStamped.h>
+#include <infuse_cdff_types/PointCloud_InFuse.h>
 
 
 void toASN1SCC(const pcl::uint64_t& pcl_stamp, Time& time);
