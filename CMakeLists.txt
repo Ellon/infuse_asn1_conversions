@@ -185,3 +185,10 @@ install(
     NAMESPACE "${namespace}"
     DESTINATION "${config_install_dir}"
 )
+
+###
+# Add an uninstall target
+configure_file(
+    "cmake/cmake_uninstall.cmake.in"
+    "${generated_dir}/cmake_uninstall.cmake" @ONLY)
+add_custom_target(uninstall "${CMAKE_COMMAND}" -P "${generated_dir}/cmake_uninstall.cmake")
