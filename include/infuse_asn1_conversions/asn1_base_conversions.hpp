@@ -9,7 +9,7 @@
 // -----------
 // ASN1 types 
 // -----------
-#include <infuse_cdff_types/taste-extended.h>
+#include <infuse_asn1_types/taste-extended.h>
 
 
 void toASN1SCC(const std::string& str, T_String& t_str);

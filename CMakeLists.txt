@@ -8,9 +8,9 @@ project (infuse_asn1_conversions VERSION 0.1)
 
 
 ####
-# Imports infuse_cdff_types targets
-find_package (infuse_cdff_types 0.1 CONFIG REQUIRED)
-include_directories (${infuse_cdff_types_INCLUDE_DIR})
+# Imports infuse_asn1_types targets
+find_package (infuse_asn1_types 0.1 CONFIG REQUIRED)
+include_directories (${infuse_asn1_types_INCLUDE_DIR})
 
 
 include_directories (include)
@@ -26,7 +26,7 @@ option (WITH_ROS   "Compile conversions to/from ROS structures"   TRUE)
 # Base types conversions
 set (component_name base)
 add_library (${component_name}_conversions SHARED src/asn1_${component_name}_conversions.cpp)
-target_link_libraries (${component_name}_conversions infuse_cdff_types::infuse_cdff_types)
+target_link_libraries (${component_name}_conversions infuse_asn1_types::infuse_asn1_types)
 set_target_properties (${component_name}_conversions 
     PROPERTIES
         OUTPUT_NAME ${PROJECT_NAME}_${component_name}
@@ -42,7 +42,7 @@ if (WITH_EIGEN)
 
     set (component_name eigen)
     add_library (${component_name}_conversions SHARED src/asn1_${component_name}_conversions.cpp)
-    target_link_libraries (${component_name}_conversions infuse_cdff_types::infuse_cdff_types)
+    target_link_libraries (${component_name}_conversions infuse_asn1_types::infuse_asn1_types)
     set_target_properties (${component_name}_conversions 
         PROPERTIES
             OUTPUT_NAME ${PROJECT_NAME}_${component_name}
@@ -63,7 +63,7 @@ if (WITH_PCL)
     add_library (${component_name}_conversions SHARED src/asn1_${component_name}_conversions.cpp)
     target_link_libraries (${component_name}_conversions 
         base_conversions
-        infuse_cdff_types::infuse_cdff_types)
+        infuse_asn1_types::infuse_asn1_types)
     set_target_properties (${component_name}_conversions 
         PROPERTIES
             OUTPUT_NAME ${PROJECT_NAME}_${component_name}
@@ -88,7 +88,7 @@ if (WITH_ROS)
     add_library (${component_name}_conversions SHARED src/asn1_${component_name}_conversions.cpp)
     target_link_libraries (${component_name}_conversions 
         ${ROS_LIBRARIES}
-        infuse_cdff_types::infuse_cdff_types)
+        infuse_asn1_types::infuse_asn1_types)
     set_target_properties (${component_name}_conversions 
         PROPERTIES
             OUTPUT_NAME ${PROJECT_NAME}_${component_name}
@@ -158,6 +158,7 @@ configure_package_config_file(
 ####
 # Installation
 
+# Targets
 install(
     TARGETS ${TARGETS_TO_INSTALL}
     EXPORT "${TARGETS_EXPORT_NAME}"
@@ -169,25 +170,23 @@ install(
 )
 
 
-# Config
-#   * <prefix>/lib/cmake/infuse_cdff_types/infuse_cdff_typesConfig.cmake
-#   * <prefix>/lib/cmake/infuse_cdff_types/infuse_cdff_typesConfigVersion.cmake
+# Config files
 install(
     FILES "${project_config}" "${version_config}"
     DESTINATION "${config_install_dir}"
 )
 
 
-# Config
-#   * <prefix>/lib/cmake/infuse_cdff_types/infuse_cdff_typesTargets.cmake
+# Exported targets config file
 install(
     EXPORT "${TARGETS_EXPORT_NAME}"
     NAMESPACE "${namespace}"
     DESTINATION "${config_install_dir}"
 )
 
+
 ###
-# Add an uninstall target
+# Add an uninstall target, useful when we want to clean files installed by hand
 configure_file(
     "cmake/cmake_uninstall.cmake.in"
     "${generated_dir}/cmake_uninstall.cmake" @ONLY)

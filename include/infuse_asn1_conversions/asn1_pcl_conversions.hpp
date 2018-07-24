@@ -10,9 +10,9 @@
 // -----------
 // ASN1 types 
 // -----------
-#include <infuse_cdff_types/Time.h>
-#include <infuse_cdff_types/Point.h>
-#include <infuse_cdff_types/PointCloud_InFuse.h>
+#include <infuse_asn1_types/Time.h>
+#include <infuse_asn1_types/Point.h>
+#include <infuse_asn1_types/Pointcloud.h>
 
 
 void toASN1SCC(const pcl::uint64_t& pcl_stamp, Time& time);
