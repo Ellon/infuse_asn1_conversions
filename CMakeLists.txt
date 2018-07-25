@@ -29,6 +29,7 @@ add_library (${component_name}_conversions SHARED src/asn1_${component_name}_con
 target_link_libraries (${component_name}_conversions infuse_asn1_types::infuse_asn1_types)
 set_target_properties (${component_name}_conversions 
     PROPERTIES
+        VERSION ${PROJECT_VERSION}
         OUTPUT_NAME ${PROJECT_NAME}_${component_name}
         PUBLIC_HEADER include/${PROJECT_NAME}/asn1_${component_name}_conversions.hpp
 )
@@ -45,6 +46,7 @@ if (WITH_EIGEN)
     target_link_libraries (${component_name}_conversions infuse_asn1_types::infuse_asn1_types)
     set_target_properties (${component_name}_conversions 
         PROPERTIES
+            VERSION ${PROJECT_VERSION}
             OUTPUT_NAME ${PROJECT_NAME}_${component_name}
             PUBLIC_HEADER include/${PROJECT_NAME}/asn1_${component_name}_conversions.hpp
     )
@@ -66,6 +68,7 @@ if (WITH_PCL)
         infuse_asn1_types::infuse_asn1_types)
     set_target_properties (${component_name}_conversions 
         PROPERTIES
+            VERSION ${PROJECT_VERSION}
             OUTPUT_NAME ${PROJECT_NAME}_${component_name}
             PUBLIC_HEADER include/${PROJECT_NAME}/asn1_${component_name}_conversions.hpp
     )
@@ -91,6 +94,7 @@ if (WITH_ROS)
         infuse_asn1_types::infuse_asn1_types)
     set_target_properties (${component_name}_conversions 
         PROPERTIES
+            VERSION ${PROJECT_VERSION}
             OUTPUT_NAME ${PROJECT_NAME}_${component_name}
             PUBLIC_HEADER include/${PROJECT_NAME}/asn1_${component_name}_conversions.hpp
     )
