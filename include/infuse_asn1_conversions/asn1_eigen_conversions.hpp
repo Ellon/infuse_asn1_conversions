@@ -13,37 +13,37 @@
 #include <infuse_asn1_types/TransformWithCovariance.h>
 
 
-void toASN1SCC(const Eigen::Vector3f& eigen_vector, Position& pos);
+void toASN1SCC(const Eigen::Vector3f& eigen_vector, asn1SccPosition& pos);
 
-void fromASN1SCC(const Position& pos, Eigen::Vector3f& eigen_vector);
+void fromASN1SCC(const asn1SccPosition& pos, Eigen::Vector3f& eigen_vector);
 
-void toASN1SCC(const Eigen::Quaternionf& quat, Orientation& orient);
+void toASN1SCC(const Eigen::Quaternionf& quat, asn1SccOrientation& orient);
 
-void fromASN1SCC(const Orientation& orient, Eigen::Quaternionf& quat);
+void fromASN1SCC(const asn1SccOrientation& orient, Eigen::Quaternionf& quat);
 
-void toASN1SCC(const Eigen::Matrix3f& eigen_rot_matrix, Orientation& orient);
+void toASN1SCC(const Eigen::Matrix3f& eigen_rot_matrix, asn1SccOrientation& orient);
 
-void fromASN1SCC(const Orientation& orient, Eigen::Matrix3f& eigen_rot_matrix);
+void fromASN1SCC(const asn1SccOrientation& orient, Eigen::Matrix3f& eigen_rot_matrix);
 
-void toASN1SCC(const Eigen::Affine3f& eigen_transform, Pose& pose);
+void toASN1SCC(const Eigen::Affine3f& eigen_transform, asn1SccPose& pose);
 
 template<class EIGEN_TRANSFORM>
-void toASN1SCC(const EIGEN_TRANSFORM& eigen_transform, TransformWithCovariance& transform)
+void toASN1SCC(const EIGEN_TRANSFORM& eigen_transform, asn1SccTransformWithCovariance& transform)
 {
 	// NOTE: transform.cov not set in this function!
 
 	typename EIGEN_TRANSFORM::VectorType t(eigen_transform.translation());
-	transform.translation.arr[0] = t[0];
-	transform.translation.arr[1] = t[1];
-	transform.translation.arr[2] = t[2];
-	transform.translation.nCount = 3;
+	transform.data.translation.arr[0] = t[0];
+	transform.data.translation.arr[1] = t[1];
+	transform.data.translation.arr[2] = t[2];
+	transform.data.translation.nCount = 3;
 
 	Eigen::Quaternion<typename EIGEN_TRANSFORM::Scalar> quat(eigen_transform.rotation());
-	transform.orientation.arr[0] = quat.x();
-	transform.orientation.arr[1] = quat.y();
-	transform.orientation.arr[2] = quat.z();
-	transform.orientation.arr[3] = quat.w();
-	transform.orientation.nCount = 4;
+	transform.data.orientation.arr[0] = quat.x();
+	transform.data.orientation.arr[1] = quat.y();
+	transform.data.orientation.arr[2] = quat.z();
+	transform.data.orientation.arr[3] = quat.w();
+	transform.data.orientation.nCount = 4;
 }
 
 

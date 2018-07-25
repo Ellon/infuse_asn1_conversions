@@ -12,9 +12,9 @@
 #include <infuse_asn1_types/taste-extended.h>
 
 
-void toASN1SCC(const std::string& str, T_String& t_str);
+void toASN1SCC(const std::string& str, asn1SccT_String& t_str);
 
-void fromASN1SCC(const T_String& t_str, std::string& str);
+void fromASN1SCC(const asn1SccT_String& t_str, std::string& str);
 
 
 #endif // _ASN1SCC_CONVERSIONS_H_

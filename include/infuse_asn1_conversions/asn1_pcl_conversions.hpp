@@ -15,23 +15,23 @@
 #include <infuse_asn1_types/Pointcloud.h>
 
 
-void toASN1SCC(const pcl::uint64_t& pcl_stamp, Time& time);
+void toASN1SCC(const pcl::uint64_t& pcl_stamp, asn1SccTime& time);
 
-void fromASN1SCC(const Time& time, pcl::uint64_t& pcl_stamp);
+void fromASN1SCC(const asn1SccTime& time, pcl::uint64_t& pcl_stamp);
 
-void toASN1SCC(const pcl::PointXYZ& pcl_pt, Point& pt);
+void toASN1SCC(const pcl::PointXYZ& pcl_pt, asn1SccPoint& pt);
 
-void fromASN1SCC(const Point& pt, pcl::PointXYZ& pcl_pt);
+void fromASN1SCC(const asn1SccPoint& pt, pcl::PointXYZ& pcl_pt);
 
-void toASN1SCC(const pcl::PointXYZI& pcl_pt, Point& pt);
+void toASN1SCC(const pcl::PointXYZI& pcl_pt, asn1SccPoint& pt);
 
-void fromASN1SCC(const Point& pt, pcl::PointXYZI& pcl_pt);
+void fromASN1SCC(const asn1SccPoint& pt, pcl::PointXYZI& pcl_pt);
 
-void toASN1SCC(const pcl::PointCloud<pcl::PointXYZI>& pcl_cloud, PointCloud_InFuse& cloud);
+void toASN1SCC(const pcl::PointCloud<pcl::PointXYZI>& pcl_cloud, asn1SccPointcloud& cloud);
 
-void fromASN1SCC(const PointCloud_InFuse& cloud, pcl::PointCloud<pcl::PointXYZI>& pcl_cloud);
+void fromASN1SCC(const asn1SccPointcloud& cloud, pcl::PointCloud<pcl::PointXYZI>& pcl_cloud);
 
-void toASN1SCC(const pcl::PointCloud<pcl::PointXYZ>& pcl_cloud, PointCloud_InFuse& cloud);
+void toASN1SCC(const pcl::PointCloud<pcl::PointXYZ>& pcl_cloud, asn1SccPointcloud& cloud);
 
 
 #endif // _ASN1SCC_PCL_CONVERSIONS_H_

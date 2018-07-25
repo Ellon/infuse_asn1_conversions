@@ -2,21 +2,21 @@
 
 #include "infuse_asn1_conversions/asn1_base_conversions.hpp"
 
-void toASN1SCC(const pcl::uint64_t& pcl_stamp, Time& time)
+void toASN1SCC(const pcl::uint64_t& pcl_stamp, asn1SccTime& time)
 {
 	// pcl::PCLHeader::stamp represents microseconds since 1970-01-01 00:00:00 (the UNIX epoch).
-	time.microseconds = (T_Int64)pcl_stamp;
+	time.microseconds = (asn1SccT_Int64)pcl_stamp;
 	// This should be a constant.
 	// See: https://www.rock-robotics.org/stable/api/base/types/structbase_1_1Time.html#a9ebef61fd3740771e8f7ff888e41c9cd
 	time.usecPerSec = 1000000ll;
 }
 
-void fromASN1SCC(const Time& time, pcl::uint64_t& pcl_stamp)
+void fromASN1SCC(const asn1SccTime& time, pcl::uint64_t& pcl_stamp)
 {
 	pcl_stamp = (pcl::uint64_t)time.microseconds;
 }
 
-void toASN1SCC(const pcl::PointXYZ& pcl_pt, Point& pt)
+void toASN1SCC(const pcl::PointXYZ& pcl_pt, asn1SccPoint& pt)
 {
 	pt.arr[0] = pcl_pt.x;
 	pt.arr[1] = pcl_pt.y;
@@ -24,7 +24,7 @@ void toASN1SCC(const pcl::PointXYZ& pcl_pt, Point& pt)
 	pt.nCount = 3;
 }
 
-void toASN1SCC(const pcl::PointXYZI& pcl_pt, Point& pt)
+void toASN1SCC(const pcl::PointXYZI& pcl_pt, asn1SccPoint& pt)
 {
 	pt.arr[0] = pcl_pt.x;
 	pt.arr[1] = pcl_pt.y;
@@ -32,7 +32,7 @@ void toASN1SCC(const pcl::PointXYZI& pcl_pt, Point& pt)
 	pt.nCount = 3;
 }
 
-void fromASN1SCC(const Point& pt, pcl::PointXYZ& pcl_pt)
+void fromASN1SCC(const asn1SccPoint& pt, pcl::PointXYZ& pcl_pt)
 {
 	if(pt.nCount < 3)
 		throw std::runtime_error("Invalid Point size ( size < 3)");
@@ -41,7 +41,7 @@ void fromASN1SCC(const Point& pt, pcl::PointXYZ& pcl_pt)
 	pcl_pt.z = pt.arr[2];
 }
 
-void fromASN1SCC(const Point& pt, pcl::PointXYZI& pcl_pt)
+void fromASN1SCC(const asn1SccPoint& pt, pcl::PointXYZI& pcl_pt)
 {
 	if(pt.nCount < 3)
 		throw std::runtime_error("Invalid Point size ( size < 3)");
@@ -50,146 +50,146 @@ void fromASN1SCC(const Point& pt, pcl::PointXYZI& pcl_pt)
 	pcl_pt.z = pt.arr[2];
 }
 
-void toASN1SCC(const pcl::PointCloud<pcl::PointXYZI>& pcl_cloud, PointCloud_InFuse& cloud)
+void toASN1SCC(const pcl::PointCloud<pcl::PointXYZI>& pcl_cloud, asn1SccPointcloud& cloud)
 {
 	// Version
-	cloud.msgVersion = pointCloud_Infuse_Version;
+	cloud.metadata.msgVersion = pointCloud_Version;
 
 	// timeStamp
-	toASN1SCC(pcl_cloud.header.stamp, cloud.timeStamp);
+	toASN1SCC(pcl_cloud.header.stamp, cloud.metadata.timeStamp);
 
 	// frameId
-	toASN1SCC(pcl_cloud.header.frame_id, cloud.frameId);
+	toASN1SCC(pcl_cloud.header.frame_id, cloud.metadata.frameId);
 
 	// Set points
 	unsigned int pt_count = 0;
 	for (size_t i = 0; i < pcl_cloud.points.size(); i++) {
 		if (pcl::isFinite(pcl_cloud.points[i]) and pcl_isfinite(pcl_cloud.points[i].intensity)) {
-			toASN1SCC(pcl_cloud.points[i], cloud.points.arr[pt_count]);
-			cloud.intensity.arr[pt_count] = (T_Int32)pcl_cloud.points[i].intensity;
+			toASN1SCC(pcl_cloud.points[i], cloud.data.points.arr[pt_count]);
+			cloud.data.intensity.arr[pt_count] = (asn1SccT_Int32)pcl_cloud.points[i].intensity;
 			pt_count++;
 		}
-		if (pt_count >= maxSize)
+		if (pt_count >= maxPointcloudSize)
 			break;
 	}
 
 	// Set number of points
-	cloud.points.nCount = (int)pt_count;
-	cloud.intensity.nCount = (int)pt_count;
+	cloud.data.points.nCount = (int)pt_count;
+	cloud.data.intensity.nCount = (int)pt_count;
 
 	// Set oganization info
 	if (pt_count == pcl_cloud.points.size()) {
-		cloud.isOrdered = (pcl_cloud.height > 1);
-		cloud.height = pcl_cloud.height;
-		cloud.width = pcl_cloud.width;
+		cloud.metadata.isOrdered = (pcl_cloud.height > 1);
+		cloud.metadata.height = pcl_cloud.height;
+		cloud.metadata.width = pcl_cloud.width;
 	} else {
 		// we truncated the point cloud (either due to ASN.1 'maxSize' limit
 		// or because there were invalid points), so the cloud is not
 		// organized anymore.
-		cloud.isOrdered = false;
-		cloud.height = 1;
-		cloud.width = pt_count;
+		cloud.metadata.isOrdered = false;
+		cloud.metadata.height = 1;
+		cloud.metadata.width = pt_count;
 	}
 
 	// No color information
-	cloud.isRegistered = false;
-	PointCloud_InFuse_colors_Initialize(&cloud.colors);
+	cloud.metadata.isRegistered = false;
+	asn1SccPointCloud_Data_colors_Initialize(&cloud.data.colors);
 
 	// The following information does not depend on the point cloud and should
 	// be set from outside this function
 	//
-	// cloud.sensorId = ?;
-	// cloud.hasFixedTransform = ?;
-	// cloud.pose_robotFrame_sensorFrame = ?;
-	// cloud.pose_fixedFrame_robotFrame = ?;
+	// cloud.metadata.sensorId = ?;
+	// cloud.metadata.hasFixedTransform = ?;
+	// cloud.metadata.pose_robotFrame_sensorFrame = ?;
+	// cloud.metadata.pose_fixedFrame_robotFrame = ?;
 }
 
-void fromASN1SCC(const PointCloud_InFuse& cloud, pcl::PointCloud<pcl::PointXYZI>& pcl_cloud)
+void fromASN1SCC(const asn1SccPointcloud& cloud, pcl::PointCloud<pcl::PointXYZI>& pcl_cloud)
 {
 	// timeStamp
-	fromASN1SCC(cloud.timeStamp, pcl_cloud.header.stamp);
+	fromASN1SCC(cloud.metadata.timeStamp, pcl_cloud.header.stamp);
 
 	// frameId
-	fromASN1SCC(cloud.frameId, pcl_cloud.header.frame_id);
+	fromASN1SCC(cloud.metadata.frameId, pcl_cloud.header.frame_id);
 
 	// Set points
-	pcl_cloud.points.resize(std::min(cloud.points.nCount, cloud.intensity.nCount));
+	pcl_cloud.points.resize(std::min(cloud.data.points.nCount, cloud.data.intensity.nCount));
 	for (size_t i = 0; i < pcl_cloud.points.size(); i++) {
-		fromASN1SCC(cloud.points.arr[i], pcl_cloud.points[i]);
-		pcl_cloud.points[i].intensity = (float) cloud.intensity.arr[i];
+		fromASN1SCC(cloud.data.points.arr[i], pcl_cloud.points[i]);
+		pcl_cloud.points[i].intensity = (float) cloud.data.intensity.arr[i];
 	}
 
 	// Set oganization info
-	if (cloud.isOrdered) {
-		pcl_cloud.height = cloud.height;
-		pcl_cloud.width = cloud.width;
+	if (cloud.metadata.isOrdered) {
+		pcl_cloud.height = cloud.metadata.height;
+		pcl_cloud.width = cloud.metadata.width;
 	} else {
 		pcl_cloud.height = 1;
 		pcl_cloud.width = pcl_cloud.points.size();
 	}
 
 	// No place to store color information in the pcl cloud
-	// cloud.isRegistered = false;
-	// PointCloud_InFuse_colors_Initialize(&cloud.colors);
+	// cloud.metadata.isRegistered = false;
+	// asn1SccPointcloud_colors_Initialize(&cloud.colors);
 
 	// The following information does not depend on the point cloud and should
 	// be set from outside this function
 	//
-	// cloud.sensorId = ?;
-	// cloud.hasFixedTransform = ?;
-	// cloud.pose_robotFrame_sensorFrame = ?;
-	// cloud.pose_fixedFrame_robotFrame = ?;
+	// cloud.metadata.sensorId = ?;
+	// cloud.metadata.hasFixedTransform = ?;
+	// cloud.metadata.pose_robotFrame_sensorFrame = ?;
+	// cloud.metadata.pose_fixedFrame_robotFrame = ?;
 }
 
-void toASN1SCC(const pcl::PointCloud<pcl::PointXYZ>& pcl_cloud, PointCloud_InFuse& cloud)
+void toASN1SCC(const pcl::PointCloud<pcl::PointXYZ>& pcl_cloud, asn1SccPointcloud& cloud)
 {
 	// Version
-	cloud.msgVersion = pointCloud_Infuse_Version;
+	cloud.metadata.msgVersion = pointCloud_Version;
 
 	// timeStamp
-	toASN1SCC(pcl_cloud.header.stamp, cloud.timeStamp);
+	toASN1SCC(pcl_cloud.header.stamp, cloud.metadata.timeStamp);
 
 	// Set points
 	unsigned int pt_count = 0;
 	for (size_t i = 0; i < pcl_cloud.points.size(); i++) {
 		if (pcl::isFinite(pcl_cloud.points[i])) {
-			toASN1SCC(pcl_cloud.points[i], cloud.points.arr[pt_count]);
+			toASN1SCC(pcl_cloud.points[i], cloud.data.points.arr[pt_count]);
 			pt_count++;
 		}
-		if (pt_count >= maxSize)
+		if (pt_count >= maxPointcloudSize)
 			break;
 	}
 
 	// Set number of points
-	cloud.points.nCount = (int)pt_count;
+	cloud.data.points.nCount = (int)pt_count;
 
 	// Set oganization info
 	if (pt_count == pcl_cloud.points.size()) {
-		cloud.isOrdered = (pcl_cloud.height > 1);
-		cloud.height = pcl_cloud.height;
-		cloud.width = pcl_cloud.width;
+		cloud.metadata.isOrdered = (pcl_cloud.height > 1);
+		cloud.metadata.height = pcl_cloud.height;
+		cloud.metadata.width = pcl_cloud.width;
 	} else {
 		// we truncated the point cloud (either due to ASN.1 'maxSize' limit
 		// or because there were invalid points), so the cloud is not
 		// organized anymore.
-		cloud.isOrdered = false;
-		cloud.height = 1;
-		cloud.width = pt_count;
+		cloud.metadata.isOrdered = false;
+		cloud.metadata.height = 1;
+		cloud.metadata.width = pt_count;
 	}
 
 	// No intensity information
-	PointCloud_InFuse_intensity_Initialize(&cloud.intensity);
+	asn1SccPointCloud_Data_intensity_Initialize(&cloud.data.intensity);
 
 	// No color information
-	cloud.isRegistered = false;
-	PointCloud_InFuse_colors_Initialize(&cloud.colors);
+	cloud.metadata.isRegistered = false;
+	asn1SccPointCloud_Data_colors_Initialize(&cloud.data.colors);
 
 	// The following information does not depend on the point cloud and should
 	// be set from outside this function
 	//
-	// cloud.sensorId = ?;
-	// cloud.frameId = ?;
-	// cloud.hasFixedTransform = ?;
-	// cloud.pose_robotFrame_sensorFrame = ?;
-	// cloud.pose_fixedFrame_robotFrame = ?;
+	// cloud.metadata.sensorId = ?;
+	// cloud.metadata.frameId = ?;
+	// cloud.metadata.hasFixedTransform = ?;
+	// cloud.metadata.pose_robotFrame_sensorFrame = ?;
+	// cloud.metadata.pose_fixedFrame_robotFrame = ?;
 }
