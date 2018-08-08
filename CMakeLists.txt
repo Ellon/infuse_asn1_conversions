@@ -120,6 +120,9 @@ include(GNUInstallDirs)
 #   * <prefix>/include/
 set(config_install_dir "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")
 
+# This is exclusive for pkg-config
+set(pkgconfig_install_dir "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
+
 
 set(generated_dir "${CMAKE_CURRENT_BINARY_DIR}/generated")
 
@@ -158,6 +161,52 @@ configure_package_config_file(
       CMAKE_INSTALL_INCLUDEDIR
 )
 
+# Configure '<PROJECT-NAME>_<COMPONENT_NAME>.pc'
+# Uses variables:
+#   * PROJECT_NAME
+#   * PROJECT_VERSION
+#   * CMAKE_INSTALL_PREFIX
+#   * CMAKE_INSTALL_LIBDIR
+#   * CMAKE_INSTALL_INCLUDEDIR
+#   * COMPONENT_NAME
+#   * REQUIRED_COMPONENTS
+set (COMPONENT_NAME base)
+set (REQUIRED_COMPONENTS "")
+configure_file(
+    "cmake/pkgconfig_component.pc.cmakein"
+    "${generated_dir}/${PROJECT_NAME}_${COMPONENT_NAME}.pc" @ONLY
+)
+
+
+if (WITH_EIGEN)
+    set (COMPONENT_NAME eigen)
+    set (REQUIRED_COMPONENTS ${PROJECT_NAME}_base)
+    configure_file(
+        "cmake/pkgconfig_component.pc.cmakein"
+        "${generated_dir}/${PROJECT_NAME}_${COMPONENT_NAME}.pc" @ONLY
+    )
+endif()
+
+
+if (WITH_PCL)
+    set (COMPONENT_NAME pcl)
+    set (REQUIRED_COMPONENTS ${PROJECT_NAME}_base)
+    configure_file(
+        "cmake/pkgconfig_component.pc.cmakein"
+        "${generated_dir}/${PROJECT_NAME}_${COMPONENT_NAME}.pc" @ONLY
+    )
+endif()
+
+
+if (WITH_ROS)
+    set (COMPONENT_NAME ros)
+    set (REQUIRED_COMPONENTS ${PROJECT_NAME}_base)
+    configure_file(
+        "cmake/pkgconfig_component.pc.cmakein"
+        "${generated_dir}/${PROJECT_NAME}_${COMPONENT_NAME}.pc" @ONLY
+    )
+endif()
+
 
 ####
 # Installation
@@ -174,14 +223,52 @@ install(
 )
 
 
-# Config files
+# CMake Config files
+#   * <prefix>/lib/cmake/${PROJECT_NAME}/${PROJECT_NAME}Config.cmake
+#   * <prefix>/lib/cmake/${PROJECT_NAME}/${PROJECT_NAME}ConfigVersion.cmake
 install(
     FILES "${project_config}" "${version_config}"
     DESTINATION "${config_install_dir}"
 )
 
+# pkg-config file 
+#   * <prefix>/lib/pkgconfig/${PROJECT_NAME}.pc
+set (COMPONENT_NAME base)
+install(
+    FILES "${generated_dir}/${PROJECT_NAME}_${COMPONENT_NAME}.pc"
+    DESTINATION "${pkgconfig_install_dir}"
+)
+
+
+if (WITH_EIGEN)
+    set (COMPONENT_NAME eigen)
+    install(
+        FILES "${generated_dir}/${PROJECT_NAME}_${COMPONENT_NAME}.pc"
+        DESTINATION "${pkgconfig_install_dir}"
+    )
+endif()
+
+
+if (WITH_PCL)
+    set (COMPONENT_NAME pcl)
+    install(
+        FILES "${generated_dir}/${PROJECT_NAME}_${COMPONENT_NAME}.pc"
+        DESTINATION "${pkgconfig_install_dir}"
+    )
+endif()
+
+
+if (WITH_ROS)
+    set (COMPONENT_NAME ros)
+    install(
+        FILES "${generated_dir}/${PROJECT_NAME}_${COMPONENT_NAME}.pc"
+        DESTINATION "${pkgconfig_install_dir}"
+    )
+endif()
+
 
 # Exported targets config file
+#   * <prefix>/lib/cmake/infuse_cdff_types/infuse_cdff_typesTargets.cmake
 install(
     EXPORT "${TARGETS_EXPORT_NAME}"
     NAMESPACE "${namespace}"
