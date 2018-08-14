@@ -5,13 +5,10 @@ void toASN1SCC(const Eigen::Vector3f& eigen_vector, asn1SccPosition& pos)
 	pos.arr[0] = eigen_vector[0];
 	pos.arr[1] = eigen_vector[1];
 	pos.arr[2] = eigen_vector[2];
-	pos.nCount = 3;
 }
 
 void fromASN1SCC(const asn1SccPosition& pos, Eigen::Vector3f& eigen_vector)
 {
-	if (pos.nCount != 3)
-		throw std::runtime_error("Position array size is not 3");
 	eigen_vector[0] = pos.arr[0];
 	eigen_vector[1] = pos.arr[1];
 	eigen_vector[2] = pos.arr[2];
@@ -26,14 +23,10 @@ void toASN1SCC(const Eigen::Quaternionf& quat, asn1SccOrientation& orient)
 	orient.arr[1] = quat.y();
 	orient.arr[2] = quat.z();
 	orient.arr[3] = quat.w();
-	orient.nCount = 4;
 }
 
 void fromASN1SCC(const asn1SccOrientation& orient, Eigen::Quaternionf& quat)
 {
-	if (orient.nCount != 4)
-		throw std::runtime_error("Orientaton array size is not 4");
-
 	// In a Eigen Quaternion the coefficients are stored internally in the
 	// following order: [x, y, z, w], so we use the same order here.
 	// See: https://eigen.tuxfamily.org/dox/classEigen_1_1Quaternion.html#ad30f4da9a2c0c8dd95520ee8a6d14ef6

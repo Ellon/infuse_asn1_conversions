@@ -9,7 +9,7 @@ project (infuse_asn1_conversions VERSION 0.1)
 
 ####
 # Imports infuse_asn1_types targets
-find_package (infuse_asn1_types 0.1 CONFIG REQUIRED)
+find_package (infuse_asn1_types 0.2 CONFIG REQUIRED)
 include_directories (${infuse_asn1_types_INCLUDE_DIR})
 
 

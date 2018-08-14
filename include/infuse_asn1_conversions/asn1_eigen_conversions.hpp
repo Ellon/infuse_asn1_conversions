@@ -36,14 +36,12 @@ void toASN1SCC(const EIGEN_TRANSFORM& eigen_transform, asn1SccTransformWithCovar
 	transform.data.translation.arr[0] = t[0];
 	transform.data.translation.arr[1] = t[1];
 	transform.data.translation.arr[2] = t[2];
-	transform.data.translation.nCount = 3;
 
 	Eigen::Quaternion<typename EIGEN_TRANSFORM::Scalar> quat(eigen_transform.rotation());
 	transform.data.orientation.arr[0] = quat.x();
 	transform.data.orientation.arr[1] = quat.y();
 	transform.data.orientation.arr[2] = quat.z();
 	transform.data.orientation.arr[3] = quat.w();
-	transform.data.orientation.nCount = 4;
 }
 
 

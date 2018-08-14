@@ -21,7 +21,6 @@ void toASN1SCC(const pcl::PointXYZ& pcl_pt, asn1SccPoint& pt)
 	pt.arr[0] = pcl_pt.x;
 	pt.arr[1] = pcl_pt.y;
 	pt.arr[2] = pcl_pt.z;
-	pt.nCount = 3;
 }
 
 void toASN1SCC(const pcl::PointXYZI& pcl_pt, asn1SccPoint& pt)
@@ -29,13 +28,10 @@ void toASN1SCC(const pcl::PointXYZI& pcl_pt, asn1SccPoint& pt)
 	pt.arr[0] = pcl_pt.x;
 	pt.arr[1] = pcl_pt.y;
 	pt.arr[2] = pcl_pt.z;
-	pt.nCount = 3;
 }
 
 void fromASN1SCC(const asn1SccPoint& pt, pcl::PointXYZ& pcl_pt)
 {
-	if(pt.nCount < 3)
-		throw std::runtime_error("Invalid Point size ( size < 3)");
 	pcl_pt.x = pt.arr[0];
 	pcl_pt.y = pt.arr[1];
 	pcl_pt.z = pt.arr[2];
@@ -43,8 +39,6 @@ void fromASN1SCC(const asn1SccPoint& pt, pcl::PointXYZ& pcl_pt)
 
 void fromASN1SCC(const asn1SccPoint& pt, pcl::PointXYZI& pcl_pt)
 {
-	if(pt.nCount < 3)
-		throw std::runtime_error("Invalid Point size ( size < 3)");
 	pcl_pt.x = pt.arr[0];
 	pcl_pt.y = pt.arr[1];
 	pcl_pt.z = pt.arr[2];
