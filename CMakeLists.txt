@@ -4,7 +4,7 @@ cmake_minimum_required (VERSION 3.0)
 # Set variables:
 #   * PROJECT_NAME
 #   * PROJECT_VERSION
-project (infuse_asn1_conversions VERSION 0.1)
+project (infuse_asn1_conversions VERSION 0.2)
 
 
 ####
