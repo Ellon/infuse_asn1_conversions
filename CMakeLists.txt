@@ -6,6 +6,8 @@ cmake_minimum_required (VERSION 3.0)
 #   * PROJECT_VERSION
 project (infuse_asn1_conversions VERSION 0.2)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall")
+
 
 ####
 # Imports infuse_asn1_types targets
@@ -20,6 +22,7 @@ include_directories (include)
 option (WITH_EIGEN "Compile conversions to/from Eigen structures" TRUE)
 option (WITH_PCL   "Compile conversions to/from PCL structures"   TRUE)
 option (WITH_ROS   "Compile conversions to/from ROS structures"   TRUE)
+option (WITH_POM   "Compile conversions to/from PoM structures"   TRUE)
 
 
 ####
@@ -102,6 +105,28 @@ if (WITH_ROS)
     list (APPEND TARGETS_TO_INSTALL ${component_name}_conversions)
 endif (WITH_ROS)
 
+####
+# POM 
+if (WITH_POM)
+    # Adds function 'pkg_check_modules'
+    find_package( infuse_pom_base REQUIRED)
+    include_directories (${infuse_pom_base_INCLUDE_DIRS})
+    link_directories (${infuse_pom_base_LIBRARY_DIRS})
+
+    set (component_name pom)
+    add_library (${component_name}_conversions SHARED src/asn1_${component_name}_conversions.cpp)
+    target_link_libraries (${component_name}_conversions 
+        ${pom-base_LIBRARIES}
+        infuse_asn1_types::infuse_asn1_types)
+    set_target_properties (${component_name}_conversions 
+        PROPERTIES
+            VERSION ${PROJECT_VERSION}
+            OUTPUT_NAME ${PROJECT_NAME}_${component_name}
+            PUBLIC_HEADER include/${PROJECT_NAME}/asn1_${component_name}_conversions.hpp
+    )
+
+    list (APPEND TARGETS_TO_INSTALL ${component_name}_conversions)
+endif (WITH_POM)
 
 ####
 # Generation of configuration files
