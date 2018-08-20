@@ -232,6 +232,15 @@ if (WITH_ROS)
     )
 endif()
 
+if (WITH_POM)
+    set (COMPONENT_NAME pom)
+    set (REQUIRED_COMPONENTS ${PROJECT_NAME}_base)
+    configure_file(
+        "cmake/pkgconfig_component.pc.cmakein"
+        "${generated_dir}/${PROJECT_NAME}_${COMPONENT_NAME}.pc" @ONLY
+    )
+endif()
+
 
 ####
 # Installation
@@ -290,6 +299,15 @@ if (WITH_ROS)
         DESTINATION "${pkgconfig_install_dir}"
     )
 endif()
+
+if (WITH_POM)
+    set (COMPONENT_NAME pom)
+    install(
+        FILES "${generated_dir}/${PROJECT_NAME}_${COMPONENT_NAME}.pc"
+        DESTINATION "${pkgconfig_install_dir}"
+    )
+endif()
+
 
 
 # Exported targets config file
