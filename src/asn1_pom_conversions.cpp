@@ -6,6 +6,7 @@ using namespace std;
 void toASN1SCC(const PositionManager::Pose& pose, asn1SccTransformWithCovariance& asnPose)
 {
     asnPose.metadata.msgVersion = transformWithCovariance_version;
+    toASN1SCC(string(""), asnPose.metadata.producerId);
 
     // Convert metadata 
     toASN1SCC(pose._parent, asnPose.metadata.parentFrameId);
