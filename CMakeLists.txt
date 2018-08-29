@@ -124,32 +124,28 @@ if (WITH_POM)
             OUTPUT_NAME ${PROJECT_NAME}_${component_name}
             PUBLIC_HEADER include/${PROJECT_NAME}/asn1_${component_name}_conversions.hpp
     )
-
-
     list (APPEND TARGETS_TO_INSTALL ${component_name}_conversions)
 endif (WITH_POM)
 
-#####
-## OPENCV 
-#if (WITH_OPENCV)
-#    find_package(OpenCV REQUIRED)
-#    set (component_name opencv)
-#    add_library (${component_name}_conversions SHARED src/asn1_${component_name}_conversions.cpp)
-#    target_link_libraries (${component_name}_conversions 
-#        base_conversions
-#        ${OpenCV_LIBRARIES}
-#        infuse_asn1_types::infuse_asn1_types)
-#    target_include_directories(${component_name}_conversions PUBLIC ${OpenCV_INCLUDE_DIRS} PRIVATE include/)
-#    set_target_properties (${component_name}_conversions 
-#        PROPERTIES
-#            VERSION ${PROJECT_VERSION}
-#            OUTPUT_NAME ${PROJECT_NAME}_${component_name}
-#            PUBLIC_HEADER include/${PROJECT_NAME}/asn1_${component_name}_conversions.hpp
-#    )
-#
-#
-#    list (APPEND TARGETS_TO_INSTALL ${component_name}_conversions)
-#endif (WITH_OPENCV)
+####
+# OPENCV 
+if (WITH_OPENCV)
+    find_package(OpenCV REQUIRED)
+    set (component_name opencv)
+    add_library (${component_name}_conversions SHARED src/asn1_${component_name}_conversions.cpp)
+    target_link_libraries (${component_name}_conversions 
+        base_conversions
+        ${OpenCV_LIBRARIES}
+        infuse_asn1_types::infuse_asn1_types)
+    target_include_directories(${component_name}_conversions PUBLIC ${OpenCV_INCLUDE_DIRS} PRIVATE include/)
+    set_target_properties (${component_name}_conversions 
+        PROPERTIES
+            VERSION ${PROJECT_VERSION}
+            OUTPUT_NAME ${PROJECT_NAME}_${component_name}
+            PUBLIC_HEADER include/${PROJECT_NAME}/asn1_${component_name}_conversions.hpp
+    )
+    list (APPEND TARGETS_TO_INSTALL ${component_name}_conversions)
+endif (WITH_OPENCV)
 
 ####
 # Generation of configuration files
@@ -264,6 +260,15 @@ if (WITH_POM)
     )
 endif()
 
+if (WITH_OPENCV)
+    set (COMPONENT_NAME opencv)
+    set (REQUIRED_COMPONENTS ${PROJECT_NAME}_base)
+    configure_file(
+        "cmake/pkgconfig_component.pc.cmakein"
+        "${generated_dir}/${PROJECT_NAME}_${COMPONENT_NAME}.pc" @ONLY
+    )
+endif()
+
 
 ####
 # Installation
@@ -325,6 +330,14 @@ endif()
 
 if (WITH_POM)
     set (COMPONENT_NAME pom)
+    install(
+        FILES "${generated_dir}/${PROJECT_NAME}_${COMPONENT_NAME}.pc"
+        DESTINATION "${pkgconfig_install_dir}"
+    )
+endif()
+
+if (WITH_OPENCV)
+    set (COMPONENT_NAME opencv)
     install(
         FILES "${generated_dir}/${PROJECT_NAME}_${COMPONENT_NAME}.pc"
         DESTINATION "${pkgconfig_install_dir}"
