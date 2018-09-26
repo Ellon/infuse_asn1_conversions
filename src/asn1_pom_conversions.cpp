@@ -43,6 +43,8 @@ void fromASN1SCC(const asn1SccTransformWithCovariance& asnPose, PositionManager:
     fromASN1SCC(asnPose.metadata.childFrameId, pose._child);
     pose._childTime = asnPose.metadata.childTime.microseconds;
 
+    pose._tr.time.microseconds = pose._childTime;
+
     // Convert data
     pose._tr.transform.translation(0) = asnPose.data.translation.arr[0];
     pose._tr.transform.translation(1) = asnPose.data.translation.arr[1];
